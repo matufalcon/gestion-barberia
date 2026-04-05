@@ -7,7 +7,7 @@ class UsuarioCreate(BaseModel):
     apellido: str
     email: EmailStr
     usuario: str
-    contraseña: str
+    password: str
     telefono: Optional[str] = None
 
 # schema para leer usuario

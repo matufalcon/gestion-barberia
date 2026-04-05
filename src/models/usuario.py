@@ -10,8 +10,8 @@ class Usuario(Base):
     apellido = Column(String(100), nullable=False)
     email = Column(String(100), nullable=False, unique=True, index=True)
     usuario = Column(String(50), nullable=False, unique=True)
-    contraseña = Column(String(100), nullable=False)
-    telefono = Column(Integer, nullable=False)
+    password = Column(String(255), nullable=False)
+    telefono = Column(String(20))
 
     #relacion con barbero -> uselist relación 1:1
     barbero = relationship("Barbero", back_populates="usuario", uselist=False)
