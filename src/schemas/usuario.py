@@ -14,6 +14,7 @@ class UsuarioCreate(BaseModel):
 class UsuarioRead(BaseModel):
     usuario_id: int
     nombre: str
+    apellido: str
     email: str
     usuario: str
     telefono: Optional[str] = None
