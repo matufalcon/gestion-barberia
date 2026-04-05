@@ -14,6 +14,6 @@ class Turno(Base):
     notas = Column(Text, nullable=True)
 
     #relaciones entre tablas
-    cliente = relationship("Usuario", foreign_keys=[cliente_id])
-    barbero = relationship("Usuario", foreign_keys=[barbero_id])
-    servicio = relationship("Servicio", foreign_keys=[servicio_id])
+    cliente = relationship("Usuario", foreign_keys=[cliente_id], backref="turnos_como_cliente")
+    barbero = relationship("Barbero", foreign_keys=[barbero_id], backref="turnos")
+    servicio = relationship("Servicio", foreign_keys=[servicio_id], backref="turnos")
