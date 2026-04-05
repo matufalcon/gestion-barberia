@@ -34,6 +34,17 @@ def listar_usuarios(db: Session = Depends(get_db)):
     return usuarios
 
 #obtener un usuario por id
+@router.get("/{usuario_id}", response_model=UsuarioRead)
+def obtener_usuario(usuario_id: int, db:Session = Depends(get_db)):
+    usuario = db.query(Usuario).filter(Usuario.usuario_id == usuario_id).first()
+
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no existente")    
+    
+    return usuario
+
+
+#actualizar usuario
 @router.put("/{usuario_id}", response_model=UsuarioRead)
 def actualizar_usuario(usuario_id: int, usuario_actualizado: UsuarioCreate, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.usuario_id == usuario_id).first()
