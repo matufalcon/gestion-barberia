@@ -18,7 +18,7 @@ class TurnoRead(BaseModel):
     barbero_id: int
     servicio_id: int
     fecha_hora: datetime
-    estado: str
+    estado: str = "pendiente"
     notas: Optional[str]=None 
 
     class Config:

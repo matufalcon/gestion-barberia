@@ -1,7 +1,5 @@
 from fastapi import FastAPI
-from src.routes import usuario
-from src.routes import servicio
-from src.routes import barbero
+from src.routes import usuario, servicio, barbero, turno
 
 app = FastAPI(
     title="Barbería API",
@@ -12,6 +10,7 @@ app = FastAPI(
 app.include_router(usuario.router)
 app.include_router(servicio.router)
 app.include_router(barbero.router)
+app.include_router(turno.router)
 
 @app.get("/")
 def root():
