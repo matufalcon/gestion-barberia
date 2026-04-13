@@ -18,6 +18,12 @@ router = APIRouter(
 #crear turno
 @router.post("/", response_model=TurnoRead)
 def crear_turno(turno: TurnoCreate, db:Session = Depends(get_db)):
+    #validaciones para la fecha
+    fecha_turno = turno.fecha_hora.replace(tzinfo=None)
+    fecha_actual = datetime.now()
+
+    if fecha_turno < fecha_actual:
+        raise HTTPException(status_code=400, detail="No se pueden crear turnos en fechas pasadas")
 
     #validaciones cliente, barbero, servicio
     cliente = db.query(Usuario).filter(Usuario.usuario_id == turno.cliente_id).first()
@@ -31,14 +37,7 @@ def crear_turno(turno: TurnoCreate, db:Session = Depends(get_db)):
     servicio = db.query(Servicio).filter(Servicio.servicio_id == turno.servicio_id).first()
     if not servicio:
         raise HTTPException(status_code=404, detail="Servicio inexistente!")
-
-    #validaciones para la fecha
-    fecha_turno = turno.fecha_hora.replace(tzinfo=None)
-    fecha_actual = datetime.now()
-
-    if fecha_turno < fecha_actual:
-        raise HTTPException(status_code=400, detail="No se pueden crear turnos en fechas pasadas")
-
+    
     #validaciones barbero ocupado
     inicio_nuevo = turno.fecha_hora.replace(tzinfo=None)
     fin_nuevo = inicio_nuevo + timedelta(minutes=servicio.duracion)
