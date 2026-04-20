@@ -5,6 +5,7 @@ from typing import List
 from src.database import get_db
 from src.models.usuario import Usuario
 from src.schemas.usuario import UsuarioCreate, UsuarioRead
+from src.auth.security import get_password_hash
 
 router = APIRouter(
     prefix="/usuarios",
@@ -20,8 +21,12 @@ def crear_usuario(usuario: UsuarioCreate, db: Session = Depends(get_db)):
     if db_usuario:
         raise HTTPException(status_code=400, detail="Email ya registrado") #error controlado
 
+    # Hashear la contraseña antes de crear el usuario
+    usuario_dict = usuario.dict()
+    usuario_dict["password"] = get_password_hash(usuario_dict["password"])
+
     #crear nuevo usuario
-    nuevo_usuario = Usuario(**usuario.dict())    
+    nuevo_usuario = Usuario(**usuario_dict)    
     db.add(nuevo_usuario)
     db.commit()
     db.refresh(nuevo_usuario)
