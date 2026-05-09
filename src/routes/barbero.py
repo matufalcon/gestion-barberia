@@ -6,6 +6,9 @@ from src.database import get_db
 from src.models.barbero import Barbero
 from src.schemas.barbero import BarberoCreate, BarberoRead
 
+from src.auth.dependencies import get_current_user
+from src.models.usuario import Usuario
+
 router = APIRouter(
     prefix="/barberos",
     tags=["Barberos"]
@@ -13,7 +16,7 @@ router = APIRouter(
 
 #crear barbero
 @router.post("/", response_model=BarberoRead)
-def crear_barbero(barbero: BarberoCreate, db:Session = Depends(get_db)):
+def crear_barbero(barbero: BarberoCreate, db:Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)):
     nuevo_barbero = Barbero(**barbero.dict())
 
     db.add(nuevo_barbero)
@@ -40,7 +43,7 @@ def obtener_barbero(barbero_id: int, db:Session = Depends(get_db)):
 
 #actualizar barbero
 @router.put("/{barbero_id}", response_model=BarberoRead)
-def actualizar_barbero(barbero_id: int, barbero_actualizado: BarberoCreate, db:Session = Depends(get_db)):
+def actualizar_barbero(barbero_id: int, barbero_actualizado: BarberoCreate, db:Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)):
     barbero = db.query(Barbero).filter(Barbero.barbero_id == barbero_id).first()
 
     if not barbero:
@@ -56,7 +59,7 @@ def actualizar_barbero(barbero_id: int, barbero_actualizado: BarberoCreate, db:S
 
 #eliminar barbero
 @router.delete("/{barbero_id}")
-def eliminar_barbero(barbero_id: int, db:Session = Depends(get_db)):
+def eliminar_barbero(barbero_id: int, db:Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)):
     barbero = db.query(Barbero).filter(Barbero.barbero_id == barbero_id).first()
 
     if not barbero:

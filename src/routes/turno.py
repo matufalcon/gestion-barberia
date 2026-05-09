@@ -10,6 +10,9 @@ from src.models.barbero import Barbero
 from src.models.servicio import Servicio
 from src.schemas.turno import TurnoCreate, TurnoRead
 
+from src.auth.dependencies import get_current_user
+from src.models.usuario import Usuario
+
 router = APIRouter( 
     prefix="/turnos",
     tags=["Turnos"]
@@ -17,7 +20,7 @@ router = APIRouter(
 
 #crear turno
 @router.post("/", response_model=TurnoRead)
-def crear_turno(turno: TurnoCreate, db:Session = Depends(get_db)):
+def crear_turno(turno: TurnoCreate, db:Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)):
     #validaciones para la fecha
     fecha_turno = turno.fecha_hora.replace(tzinfo=None)
     fecha_actual = datetime.now()
@@ -86,7 +89,7 @@ def obtener_turno(turno_id: int, db:Session = Depends(get_db)):
 
 #actualizar turno
 @router.put("/{turno_id}", response_model=TurnoRead)
-def actualizar_turno(turno_id: int, turno_actualizado: TurnoCreate, db:Session = Depends(get_db)):
+def actualizar_turno(turno_id: int, turno_actualizado: TurnoCreate, db:Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)):
     turno = db.query(Turno).filter(Turno.turno_id == turno_id).first()
 
     if not turno:
@@ -102,7 +105,7 @@ def actualizar_turno(turno_id: int, turno_actualizado: TurnoCreate, db:Session =
 
 #eliminar turno
 @router.delete("/{turno_id}")
-def eliminar_turno(turno_id: int, db:Session = Depends(get_db)):
+def eliminar_turno(turno_id: int, db:Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)):
     turno = db.query(Turno).filter(Turno.turno_id == turno_id).first()
 
     if not turno:

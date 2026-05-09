@@ -7,6 +7,8 @@ from src.models.usuario import Usuario
 from src.schemas.usuario import UsuarioCreate, UsuarioRead
 from src.auth.security import get_password_hash
 
+from src.auth.dependencies import get_current_user
+
 router = APIRouter(
     prefix="/usuarios",
     tags=["Usuarios"]
@@ -66,7 +68,7 @@ def actualizar_usuario(usuario_id: int, usuario_actualizado: UsuarioCreate, db: 
 
 #eliminar usuario
 @router.delete("/{usuario_id}")
-def eliminar_usuario(usuario_id: int, db: Session = Depends(get_db)):
+def eliminar_usuario(usuario_id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)):
     usuario = db.query(Usuario).filter(Usuario.usuario_id == usuario_id).first()
     if not usuario:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
