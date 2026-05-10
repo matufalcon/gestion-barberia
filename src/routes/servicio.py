@@ -6,13 +6,16 @@ from src.database import get_db
 from src.models.servicio import Servicio
 from src.schemas.servicio import ServicioCreate, ServicioRead
 
+from src.auth.dependencies import get_current_user
+from src.models.usuario import Usuario
+
 router = APIRouter(
     prefix="/servicios",
     tags=["Servicios"]
 )
 # POST /servicios/ - Crear servicio
 @router.post("/", response_model=ServicioRead)
-def crear_servicio(servicio: ServicioCreate, db: Session = Depends(get_db)):
+def crear_servicio(servicio: ServicioCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)):
 
     nuevo_servicio = Servicio(**servicio.dict())
     db.add(nuevo_servicio)
@@ -38,7 +41,7 @@ def obtener_servicio(servicio_id: int, db: Session = Depends(get_db)):
 
 # PUT /servicios/{servicio_id} - Actualizar
 @router.put("/{servicio_id}", response_model=ServicioRead)
-def actualizar_servicio(servicio_id: int, servicio_actualizado: ServicioCreate,db: Session = Depends(get_db)):
+def actualizar_servicio(servicio_id: int, servicio_actualizado: ServicioCreate,db: Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)):
     servicio = db.query(Servicio).filter(Servicio.servicio_id == servicio_id).first()
 
     if not servicio:
@@ -54,7 +57,7 @@ def actualizar_servicio(servicio_id: int, servicio_actualizado: ServicioCreate,d
 
 # DELETE /servicios/{servicio_id} - Eliminar
 @router.delete("/{servicio_id}")
-def eliminar_servicio(servicio_id: int, db:Session = Depends(get_db)):
+def eliminar_servicio(servicio_id: int, db:Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)):
     servicio = db.query(Servicio).filter(Servicio.servicio_id == servicio_id).first()
 
     if not servicio:

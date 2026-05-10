@@ -43,9 +43,3 @@ def get_current_user(
         )
     
     return usuario
-
-# 
-# SOLO COPIE Y PEGUE ESTE CODIGO
-# Debo arrancar desde la ultima respuesta de claude:  
-# PASO F: Usar autenticación en rutas
-#
