@@ -72,7 +72,7 @@ docker-compose up
 
 ```bash
 # Clonar repositorio
-git clone https://github.com/TU_USUARIO/gestion-barberia.git
+git clone https://github.com/matufalcon/gestion-barberia.git
 cd gestion-barberia
 
 # Crear entorno virtual
